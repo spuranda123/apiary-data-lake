@@ -105,6 +105,10 @@
             <name>hive.metastore.event.listeners</name>
             <value>{{ metastore_listeners }}</value>
         </property>
+        <property>
+            <name>hive.metastore.event.listeners</name>
+            <value>com.expediagroup.apiary.extensions.events.metastore.listener.ApiarySnsListener</value>
+        </property>
         </configuration>
 
   - name: fix metastore.sh
