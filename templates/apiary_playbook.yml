@@ -77,7 +77,8 @@
         </configuration>
 
   - set_fact:
-      metastore_listeners: "org.apache.atlas.hive.hook.HiveMetastoreHookImpl"
+      metastore_listeners: "org.apache.atlas.hive.hook.HiveMetastoreHookImpl",
+                          "com.expediagroup.apiary.extensions.events.metastore.listener.ApiarySnsListener"
     when: "{{ sns_arn != \"\" }}"
 
   - name: hive-site.xml
