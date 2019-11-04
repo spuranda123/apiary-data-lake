@@ -77,7 +77,7 @@
         </configuration>
 
   - set_fact:
-      metastore_listeners: "com.expediagroup.apiary.extensions.events.metastore.listener.ApiarySnsListener"
+      metastore_listeners: "org.apache.atlas.hive.hook.HiveMetastoreHookImpl"
     when: "{{ sns_arn != \"\" }}"
 
   - name: hive-site.xml
@@ -105,11 +105,17 @@
             <name>hive.metastore.event.listeners</name>
             <value>{{ metastore_listeners }}</value>
         </property>
-        <property>
-            <name>hive.metastore.event.listeners</name>
-            <value>com.expediagroup.apiary.extensions.events.metastore.listener.ApiarySnsListener</value>
-        </property>
         </configuration>
+
+  - name: atlas-application.properties
+    copy:
+      dest: /etc/hive/conf/
+      content: |
+        atlas.kafka.zookeeper.connect=zookeeper.egdl-eks-us-east-1.egdp-dev.aws.away.black:2181
+        atlas.kafka.bootstrap.servers=atlas.egdl-eks-us-east-1.egdp-dev.aws.away.black:909
+        atlas.notification.topics=ATLAS_HOOK,ATLAS_ENTITIES
+        atlas.kafka.hook.group.id=atlas
+
 
   - name: fix metastore.sh
     lineinfile:
@@ -179,6 +185,12 @@
     with_items:
       - apiary-metastore-listener
       - apiary-metastore-metrics
+
+  - name: download hive sync jar
+    get_url:
+      url: https://search.maven.org/org.apache.atlas:hive-bridge:2.0.0.jar
+      dest: /usr/lib/apiary/hive-bridge:2.0.0.jar
+
 
   - name: start metastore
     service:
