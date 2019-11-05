@@ -77,8 +77,7 @@
         </configuration>
 
   - set_fact:
-      metastore_listeners: "org.apache.atlas.hive.hook.HiveMetastoreHookImpl",
-                          "com.expediagroup.apiary.extensions.events.metastore.listener.ApiarySnsListener"
+      metastore_listeners: "org.apache.atlas.hive.hook.HiveMetastoreHookImpl, com.expediagroup.apiary.extensions.events.metastore.listener.ApiarySnsListener"
     when: "{{ sns_arn != \"\" }}"
 
   - name: hive-site.xml
@@ -189,8 +188,8 @@
 
   - name: download hive sync jar
     get_url:
-      url: https://search.maven.org/org.apache.atlas:hive-bridge:2.0.0.jar
-      dest: /usr/lib/apiary/hive-bridge:2.0.0.jar
+      url: https://search.maven.org/remotecontent?filepath=org/apache/atlas/hive-bridge/2.0.0/hive-bridge-2.0.0.jar
+      dest: /usr/lib/apiary/hive-bridge-2.0.0.jar
 
 
   - name: start metastore
